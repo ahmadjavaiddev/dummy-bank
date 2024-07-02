@@ -1,10 +1,9 @@
 .sidebar {
     padding: 20px;
-    background-color: #f4f4f4;
     height: 100%;
 }
 
-.sidebar nav a {
+/* .sidebar nav a {
     display: block;
     color: #333;
     padding: 10px 0;
@@ -13,4 +12,4 @@
 
 .sidebar nav a:hover {
     background-color: #ddd;
-}
+} */

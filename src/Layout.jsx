@@ -4,6 +4,11 @@ import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 // import useSystemTheme from "./lib/useSystemTheme";
 // import { useEffect } from "react";
+import {
+    ResizableHandle,
+    ResizablePanel,
+    ResizablePanelGroup,
+} from "./components/ui/resizable";
 
 function Layout() {
     // const navigate = useNavigate();
@@ -56,7 +61,40 @@ function Layout() {
         <>
             <Toaster position="top-right" reverseOrder={false} />
 
-            <div className="app-container">
+            <ResizablePanelGroup
+                direction="horizontal"
+                className="max-w-full rounded-lg border h-[100vh]"
+            >
+                <ResizablePanel defaultSize={15} className="h-[100vh]">
+                    {/* <div className="flex items-center justify-center p-6"> */}
+                        {/* <span className="font-semibold"> */}
+                            <Sidebar />
+                        {/* </span> */}
+                    {/* </div> */}
+                </ResizablePanel>
+                <ResizableHandle />
+                <ResizablePanel defaultSize={85}>
+                    <ResizablePanelGroup direction="vertical">
+                        <ResizablePanel defaultSize={7}>
+                            {/* <div className="flex items-center justify-between p-6"> */}
+                                {/* <span className="font-semibold"> */}
+                                    <Header />
+                                {/* </span> */}
+                            {/* </div> */}
+                        </ResizablePanel>
+                        <ResizableHandle />
+                        <ResizablePanel defaultSize={93}>
+                            {/* <div className="flex items-center justify-center p-6"> */}
+                                {/* <span className="font-semibold"> */}
+                                    <Outlet />
+                                {/* </span> */}
+                            {/* </div> */}
+                        </ResizablePanel>
+                    </ResizablePanelGroup>
+                </ResizablePanel>
+            </ResizablePanelGroup>
+
+            {/* <div className="app-container">
                 <Header />
                 <div className="main-content">
                     <Sidebar />
@@ -64,7 +102,7 @@ function Layout() {
                         <Outlet />
                     </div>
                 </div>
-            </div>
+            </div> */}
         </>
     );
 }

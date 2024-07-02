@@ -6,7 +6,6 @@ const Home = () => {
         (async () => {
             try {
                 const response = await axiosInstance.get("/users/user");
-                console.log("Response ::", response);
             } catch (error) {
                 console.log("Error :: Home ::", error);
             }
