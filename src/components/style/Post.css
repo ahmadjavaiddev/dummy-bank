@@ -1,0 +1,11 @@
+.post {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.post h2 {
+    margin-top: 0;
+}
