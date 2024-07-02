@@ -12,6 +12,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const Login = () => {
     const navigate = useNavigate();
@@ -31,7 +32,7 @@ const Login = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post("/api/v1/users/login", {
+            const response = await axios.post(`${apiUrl}/users/login`, {
                 email: user.email,
                 password: user.password,
             });

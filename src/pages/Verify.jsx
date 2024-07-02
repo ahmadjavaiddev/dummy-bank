@@ -7,6 +7,7 @@ import {
     InputOTPSlot,
 } from "../components/ui/input-otp";
 import axios from "axios";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const Verify = () => {
     const { type, id } = useParams();
@@ -19,14 +20,11 @@ const Verify = () => {
 
     const handleVerification = async (typeOfVerification) => {
         try {
-            const response = await axios.post(
-                "https://dummy-bank-backend-one.vercel.app/api/v1/users/verify-user",
-                {
-                    userId: id,
-                    verificationCode: otp,
-                    type: typeOfVerification,
-                }
-            );
+            const response = await axios.post(`${apiUrl}/users/verify-user`, {
+                userId: id,
+                verificationCode: otp,
+                type: typeOfVerification,
+            });
             console.log("response ::", response);
             navigate("/admin");
         } catch (error) {
