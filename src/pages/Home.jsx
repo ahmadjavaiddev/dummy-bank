@@ -1,4 +1,18 @@
+import { useEffect } from "react";
+import axiosInstance from "../lib/axiosInstance";
+
 const Home = () => {
+    useEffect(() => {
+        (async () => {
+            try {
+                const response = await axiosInstance.get("/users/user");
+                console.log("Response ::", response);
+            } catch (error) {
+                console.log("Error :: Home ::", error);
+            }
+        })();
+    }, []);
+
     return (
         <>
             <main className="hello-1 max-h-screen overflow-auto">
