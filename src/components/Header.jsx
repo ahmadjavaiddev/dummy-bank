@@ -1,105 +1,91 @@
 import { Link } from "react-router-dom";
 import "./style/Header.css";
+import { Button } from "./ui/button";
+import { LogOutIcon, MenuIcon, SettingsIcon, SignalIcon, UserIcon } from "../lib/icons.jsx";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { useEffect, useState } from "react";
 
 const Header = () => {
+    const [isDark, setIsDark] = useState(
+        () => localStorage.getItem("theme") === "dark" || !localStorage.getItem("theme")
+    );
+
+    useEffect(() => {
+        if (isDark) {
+            document.documentElement.classList.add("dark");
+            localStorage.setItem("theme", "dark");
+        } else {
+            document.documentElement.classList.remove("dark");
+            localStorage.setItem("theme", "light");
+        }
+    }, [isDark]);
     return (
-        <nav className="flex justify-between">
-            {/* <div className="flex justify-between items-center px-8"> */}
-            <Link to="#" className="flex items-center text-">
-                Dummy Bank
-            </Link>
-
-            {/* <form action="#" className="ml-8">
-                        <input
-                            type="search"
-                            name="search"
-                            id="search"
-                            className="bg-gray-50 hello-6 sm:w-80 border border-gray-300 text-gray-900 rounded-full px-6 py-2.5 focus:ring-primary-600 focus:border-primary-600 block"
-                            placeholder="Search..."
-                            required
-                        />
-                    </form> */}
-
-            {/* <div className="flex items-center lg:order-2 ml-8">
-                        <i className="fas fa-bell text-white cursor-pointer"></i>
-                        <div className="hs-dropdown relative inline-flex"> */}
-            <button
-                id="hs-dropdown-with-dividers"
-                type="button"
-                className="hs-dropdown-toggle py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
-            >
-                My Profile
-                <svg
-                    className="hs-dropdown-open:rotate-180 h-4 w-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                >
-                    <path d="m6 9 6 6 6-6" />
-                </svg>
-            </button>
-
-            {/* <div
-                                className="hs-dropdown-menu transition-opacity duration-200 opacity-0 hidden min-w-60 bg-white shadow-md rounded-lg p-2 mt-2 divide-y divide-gray-200"
-                                aria-labelledby="hs-dropdown-with-dividers"
+        <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-background px-4 shadow-sm md:px-6">
+            <div className="flex items-center gap-4">
+                <Button variant="outline" size="icon" className="md:hidden">
+                    <MenuIcon className="h-6 w-6" />
+                    <span className="sr-only">Toggle Sidebar</span>
+                </Button>
+                <h1 className="text-xl font-semibold">Dummy Bank</h1>
+                <button onClick={() => setIsDark(!isDark)}>Toggle Theme</button>
+            </div>
+            <div className="flex items-center gap-4">
+                <Button variant="ghost" size="icon">
+                    <SignalIcon className="h-6 w-6" />
+                    <span className="sr-only">Notifications</span>
+                </Button>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="rounded-full">
+                            <Avatar className="h-8 w-8">
+                                <AvatarImage src="/placeholder-user.jpg" />
+                                <AvatarFallback>JD</AvatarFallback>
+                            </Avatar>
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuItem>
+                            <Link
+                                href="#"
+                                className="flex items-center gap-2"
+                                prefetch={false}
                             >
-                                <div className="py-2">
-                                    <Link
-                                        href="#"
-                                        className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100"
-                                    >
-                                        Newsletter
-                                    </Link>
-                                    <Link
-                                        href="#"
-                                        className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100"
-                                    >
-                                        Purchases
-                                    </Link>
-                                    <Link
-                                        href="#"
-                                        className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100"
-                                    >
-                                        Downloads
-                                    </Link>
-                                    <Link
-                                        href="#"
-                                        className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100"
-                                    >
-                                        Team Account
-                                    </Link>
-                                </div>
-                                <div className="py-2">
-                                    <Link
-                                        href="#"
-                                        className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100"
-                                    >
-                                        Upgrade License
-                                    </Link>
-                                </div>
-                                <div className="py-2">
-                                    <Link
-                                        href="#"
-                                        className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100"
-                                    >
-                                        Account Settings
-                                    </Link>
-                                    <Link
-                                        href="#"
-                                        className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100"
-                                    >
-                                        Sign out
-                                    </Link>
-                                </div>
-                            </div> */}
-            {/* </div>
-                    </div>
-                </div> */}
-        </nav>
+                                <UserIcon className="h-4 w-4" />
+                                Profile
+                            </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <Link
+                                href="#"
+                                className="flex items-center gap-2"
+                                prefetch={false}
+                            >
+                                <SettingsIcon className="h-4 w-4" />
+                                Settings
+                            </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>
+                            <Link
+                                href="#"
+                                className="flex items-center gap-2"
+                                prefetch={false}
+                            >
+                                <LogOutIcon className="h-4 w-4" />
+                                Sign Out
+                            </Link>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
+        </header>
     );
 };
 

@@ -61,38 +61,13 @@ function Layout() {
         <>
             <Toaster position="top-right" reverseOrder={false} />
 
-            <ResizablePanelGroup
-                direction="horizontal"
-                className="max-w-full rounded-lg border h-[100vh]"
-            >
-                <ResizablePanel defaultSize={15} className="h-[100vh]">
-                    {/* <div className="flex items-center justify-center p-6"> */}
-                        {/* <span className="font-semibold"> */}
-                            <Sidebar />
-                        {/* </span> */}
-                    {/* </div> */}
-                </ResizablePanel>
-                <ResizableHandle />
-                <ResizablePanel defaultSize={85}>
-                    <ResizablePanelGroup direction="vertical">
-                        <ResizablePanel defaultSize={7}>
-                            {/* <div className="flex items-center justify-between p-6"> */}
-                                {/* <span className="font-semibold"> */}
-                                    <Header />
-                                {/* </span> */}
-                            {/* </div> */}
-                        </ResizablePanel>
-                        <ResizableHandle />
-                        <ResizablePanel defaultSize={93}>
-                            {/* <div className="flex items-center justify-center p-6"> */}
-                                {/* <span className="font-semibold"> */}
-                                    <Outlet />
-                                {/* </span> */}
-                            {/* </div> */}
-                        </ResizablePanel>
-                    </ResizablePanelGroup>
-                </ResizablePanel>
-            </ResizablePanelGroup>
+            <div className="flex min-h-screen w-full bg-background">
+                <Sidebar />
+                <div className="flex-1">
+                    <Header />
+                    <Outlet />
+                </div>
+            </div>
 
             {/* <div className="app-container">
                 <Header />

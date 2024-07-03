@@ -14,16 +14,16 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Textarea } from "../components/ui/textarea";
 
-const SendMoney = () => {
+const RequestMoney = () => {
     return (
         <main className="p-4 md:p-6">
             <div className="grid gap-6 md:grid-cols-[1fr_300px]">
                 <div>
                     <Card>
                         <CardHeader>
-                            <CardTitle>Send Money</CardTitle>
+                            <CardTitle>Request Money</CardTitle>
                             <CardDescription>
-                                Enter the recipient's details and the amount to send.
+                                Enter the recipient's details and the amount to request.
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -57,7 +57,7 @@ const SendMoney = () => {
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Button className="ml-auto">Send Money</Button>
+                            <Button className="ml-auto">Request Money</Button>
                         </CardFooter>
                     </Card>
                 </div>
@@ -146,4 +146,4 @@ const SendMoney = () => {
     );
 };
 
-export default SendMoney;
+export default RequestMoney;
