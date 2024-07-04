@@ -10,10 +10,9 @@ import {
 } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-// import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../lib/axiosInstance";
-// const apiUrl = import.meta.env.VITE_API_URL;
+import toast from "react-hot-toast";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -25,6 +24,7 @@ const Login = () => {
         userName: "",
         email: "",
         password: "",
+        confirmPassword: "",
     });
 
     const handleFormSwitch = () => {
@@ -37,10 +37,29 @@ const Login = () => {
                 email: user.email,
                 password: user.password,
             });
-            console.log("Login Response ::", response.data);
             navigate(`/verify/login/${response.data.data?.user?._id}`);
+            toast.success("Login SuccessFull!");
         } catch (error) {
-            console.log("Error :: Login :: Login ::", error);
+            toast.error("Error logging in user!");
+        }
+    };
+
+    const handleRegister = async () => {
+        try {
+            if (user.confirmPassword !== user.password) {
+                return;
+            }
+            const response = await axiosInstance.post(`/users/register`, {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                userName: user.userName,
+                email: user.email,
+                password: user.password,
+            });
+            navigate(`/verify/register/${response.data.data?.user?._id}`);
+            toast.success("Registration SuccessFull!");
+        } catch (error) {
+            toast.error("Error Registering user!");
         }
     };
 
@@ -111,11 +130,25 @@ const Login = () => {
                                 <div className="flex gap-2">
                                     <div className="flex flex-col space-y-1.5">
                                         <Label htmlFor="firstName">First Name</Label>
-                                        <Input id="firstName" placeholder="John" type="text" />
+                                        <Input
+                                            id="firstName"
+                                            placeholder="John"
+                                            type="text"
+                                            onChange={(e) =>
+                                                setUser({ ...user, firstName: e.target.value })
+                                            }
+                                        />
                                     </div>
                                     <div className="flex flex-col space-y-1.5">
                                         <Label htmlFor="lastName">Last Name</Label>
-                                        <Input id="lastName" placeholder="Doe" type="text" />
+                                        <Input
+                                            id="lastName"
+                                            placeholder="Doe"
+                                            type="text"
+                                            onChange={(e) =>
+                                                setUser({ ...user, lastName: e.target.value })
+                                            }
+                                        />
                                     </div>
                                 </div>
                                 <div className="flex gap-2">
@@ -125,6 +158,9 @@ const Login = () => {
                                             id="username"
                                             placeholder="johndoe"
                                             type="text"
+                                            onChange={(e) =>
+                                                setUser({ ...user, userName: e.target.value })
+                                            }
                                         />
                                     </div>
                                     <div className="flex flex-col space-y-1.5">
@@ -133,6 +169,9 @@ const Login = () => {
                                             id="email"
                                             placeholder="johndoe@mail.com"
                                             type="email"
+                                            onChange={(e) =>
+                                                setUser({ ...user, email: e.target.value })
+                                            }
                                         />
                                     </div>
                                 </div>
@@ -143,6 +182,9 @@ const Login = () => {
                                             id="password"
                                             placeholder="Your Password"
                                             type="password"
+                                            onChange={(e) =>
+                                                setUser({ ...user, password: e.target.value })
+                                            }
                                         />
                                     </div>
                                     <div className="flex flex-col space-y-1.5">
@@ -153,6 +195,12 @@ const Login = () => {
                                             id="confirmPassword"
                                             placeholder="Confirm Password"
                                             type="password"
+                                            onChange={(e) =>
+                                                setUser({
+                                                    ...user,
+                                                    confirmPassword: e.target.value,
+                                                })
+                                            }
                                         />
                                     </div>
                                 </div>
@@ -160,7 +208,9 @@ const Login = () => {
                         </form>
                     </CardContent>
                     <CardFooter className="flex flex-col justify-center">
-                        <Button size="full">Create an account</Button>
+                        <Button size="full" onClick={handleRegister}>
+                            Create an account
+                        </Button>
                         <p className="mt-3">
                             Already have an account?
                             <span
