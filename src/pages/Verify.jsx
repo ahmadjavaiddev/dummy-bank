@@ -7,6 +7,7 @@ import {
     InputOTPSlot,
 } from "../components/ui/input-otp";
 import axios from "axios";
+import toast from "react-hot-toast";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const Verify = () => {
@@ -25,17 +26,18 @@ const Verify = () => {
                 verificationCode: otp,
                 type: typeOfVerification,
             });
-            console.log("response ::", response);
+
             navigate("/admin");
+            toast.success("Verification SuccessFull!");
         } catch (error) {
-            console.log("Error :: Verify ::", error);
+            toast.error("Invalid Verification Code!");
         }
     };
 
     useEffect(() => {
         if (otp.length === 6 && id) {
-            const typeOfVerification = type === "login" ? "LOGIN" : "REGISTER";
-            console.log("typeOfVerification ::", typeOfVerification);
+            const typeOfVerification =
+                type === "login" ? "LOGIN" : type === "register" ? "REGISTER" : "IP";
             handleVerification(typeOfVerification);
         }
     }, [type, otp, id]);
