@@ -68,7 +68,6 @@ const Sidebar = () => {
 
     useEffect(() => {
         setSidebarUrl(location.pathname);
-        console.log("URL ::", location.pathname);
     }, [location.pathname]);
 
     return (
@@ -92,7 +91,6 @@ const Sidebar = () => {
                             key={item.slug}
                             to={item.slug}
                             className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground"
-                            prefetch={false}
                         >
                             <IconComponent className="h-5 w-5" />
                             {item.title}

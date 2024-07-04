@@ -52,32 +52,20 @@ const Header = () => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuItem>
-                            <Link
-                                href="#"
-                                className="flex items-center gap-2"
-                                prefetch={false}
-                            >
+                            <Link href="#" className="flex items-center gap-2">
                                 <UserIcon className="h-4 w-4" />
                                 Profile
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem>
-                            <Link
-                                href="#"
-                                className="flex items-center gap-2"
-                                prefetch={false}
-                            >
+                            <Link href="#" className="flex items-center gap-2">
                                 <SettingsIcon className="h-4 w-4" />
                                 Settings
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>
-                            <Link
-                                href="#"
-                                className="flex items-center gap-2"
-                                prefetch={false}
-                            >
+                            <Link href="#" className="flex items-center gap-2">
                                 <LogOutIcon className="h-4 w-4" />
                                 Sign Out
                             </Link>
