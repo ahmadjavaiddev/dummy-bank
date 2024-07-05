@@ -10,6 +10,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../components/ui/card";
 const apiUrl = import.meta.env.VITE_API_URL;
+import axiosInstance from "../lib/axiosInstance";
 
 const Verify = () => {
     const { type, id } = useParams();
@@ -36,6 +37,18 @@ const Verify = () => {
     };
 
     useEffect(() => {
+        (async () => {
+            try {
+                const response = await axiosInstance.get(`/users/have-otp/${id}`);
+
+                if (!response.data.exists) {
+                    navigate("/admin");
+                }
+            } catch (error) {
+                console.log("Error user doesn't have any OTP request");
+            }
+        })();
+
         if (otp.length === 6 && id) {
             const typeOfVerification =
                 type === "login" ? "LOGIN" : type === "register" ? "REGISTER" : "IP";
