@@ -13,6 +13,7 @@ import {
     TicketIcon,
     UserIcon,
 } from "../lib/icons.jsx";
+import { useSelector } from "react-redux";
 
 const navMenu = [
     {
@@ -65,13 +66,18 @@ const icons = {
 const Sidebar = () => {
     const location = useLocation();
     const [sidebarUrl, setSidebarUrl] = useState("");
+    const sidebarToggle = useSelector((state) => state.general.sidebar);
 
     useEffect(() => {
         setSidebarUrl(location.pathname);
     }, [location.pathname]);
 
     return (
-        <aside className="hidden w-64 flex-col border-r bg-background p-6 md:flex">
+        <aside
+            className={`${
+                !sidebarToggle ? "hidden" : "block"
+            } w-64 flex-col border-r bg-background p-6 md:flex`}
+        >
             <div className="flex items-center gap-2">
                 <Avatar className="h-10 w-10 border">
                     <AvatarImage src="/placeholder-user.jpg" />

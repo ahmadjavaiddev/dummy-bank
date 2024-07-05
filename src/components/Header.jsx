@@ -1,7 +1,14 @@
 import { Link } from "react-router-dom";
 import "./style/Header.css";
 import { Button } from "./ui/button";
-import { LogOutIcon, MenuIcon, SettingsIcon, SignalIcon, UserIcon } from "../lib/icons.jsx";
+import {
+    LogOutIcon,
+    MenuIcon,
+    SettingsIcon,
+    SignalIcon,
+    SunMoonIcon,
+    UserIcon,
+} from "../lib/icons.jsx";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -11,11 +18,19 @@ import {
 } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { toggleSidebar } from "../app/features/generalSlice.js";
 
 const Header = () => {
     const [isDark, setIsDark] = useState(
         () => localStorage.getItem("theme") === "dark" || !localStorage.getItem("theme")
     );
+
+    const dispatch = useDispatch((state) => state.general);
+
+    const toggleSideBar = () => {
+        dispatch(toggleSidebar());
+    };
 
     useEffect(() => {
         if (isDark) {
@@ -29,17 +44,28 @@ const Header = () => {
     return (
         <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-background px-4 shadow-sm md:px-6">
             <div className="flex items-center gap-4">
-                <Button variant="outline" size="icon" className="md:hidden">
+                <Button
+                    variant="outline"
+                    size="icon"
+                    className="md:hidden"
+                    onClick={toggleSideBar}
+                >
                     <MenuIcon className="h-6 w-6" />
                     <span className="sr-only">Toggle Sidebar</span>
                 </Button>
                 <h1 className="text-xl font-semibold">Dummy Bank</h1>
-                <button onClick={() => setIsDark(!isDark)}>Toggle Theme</button>
             </div>
             <div className="flex items-center gap-4">
                 <Button variant="ghost" size="icon">
                     <SignalIcon className="h-6 w-6" />
                     <span className="sr-only">Notifications</span>
+                </Button>
+                <Button
+                    variant="outline"
+                    className="px-2 py-1"
+                    onClick={() => setIsDark(!isDark)}
+                >
+                    <SunMoonIcon className="w-5 h-5" />
                 </Button>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
