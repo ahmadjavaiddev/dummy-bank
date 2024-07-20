@@ -62,8 +62,11 @@ const icons = {
     SettingsIcon: SettingsIcon,
     CreditCardIcon: CreditCardIcon,
 };
+import { useAuth } from "../context/AuthContext.jsx";
+import { formatAmount } from "../helpers/index.js";
 
 const Sidebar = () => {
+    const { user } = useAuth();
     const location = useLocation();
     const [sidebarUrl, setSidebarUrl] = useState("");
     const sidebarToggle = useSelector((state) => state.general.sidebar);
@@ -81,11 +84,13 @@ const Sidebar = () => {
             <div className="flex items-center gap-2">
                 <Avatar className="h-10 w-10 border">
                     <AvatarImage src="/placeholder-user.jpg" />
-                    <AvatarFallback>JD</AvatarFallback>
+                    <AvatarFallback>
+                        {user?.firstName[0].toUpperCase() + user?.lastName[0].toUpperCase()}
+                    </AvatarFallback>
                 </Avatar>
                 <div className="grid gap-0.5">
-                    <div className="font-semibold">John Doe</div>
-                    <div className="text-sm text-muted-foreground">johndoe@example.com</div>
+                    <div className="font-semibold">{user?.userName}</div>
+                    <div className="text-sm text-muted-foreground">{user?.email}</div>
                 </div>
             </div>
             <Separator className="my-6" />
@@ -110,7 +115,9 @@ const Sidebar = () => {
                     <DollarSignIcon className="h-5 w-5 text-primary" />
                     <div>
                         <div className="text-sm font-medium">Account Balance</div>
-                        <div className="text-2xl font-semibold">$12,345.67</div>
+                        <div className="text-2xl font-semibold">
+                            ${formatAmount(user?.balance)}
+                        </div>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
