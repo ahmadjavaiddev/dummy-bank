@@ -1,3 +1,7 @@
+import { Bar, BarChart, CartesianGrid, Line, XAxis } from "recharts";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../components/ui/chart";
+import { LineChart } from "lucide-react";
+
 function CreditCardIcon(props) {
     return (
         <svg
@@ -14,6 +18,46 @@ function CreditCardIcon(props) {
         >
             <rect width="20" height="14" x="2" y="5" rx="2" />
             <line x1="2" x2="22" y1="10" y2="10" />
+        </svg>
+    );
+}
+
+function BellIcon(props) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+        </svg>
+    );
+}
+
+function XIcon(props) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
         </svg>
     );
 }
@@ -253,8 +297,202 @@ function SunMoonIcon(props) {
     );
 }
 
+function ArrowDownIcon(props) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="M12 5v14" />
+            <path d="m19 12-7 7-7-7" />
+        </svg>
+    );
+}
+
+function ArrowUpIcon(props) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="m5 12 7-7 7 7" />
+            <path d="M12 19V5" />
+        </svg>
+    );
+}
+
+function BarchartChart(props) {
+    return (
+        <div {...props}>
+            <ChartContainer
+                config={{
+                    desktop: {
+                        label: "Desktop",
+                        color: "hsl(var(--chart-1))",
+                    },
+                }}
+                className="min-h-[300px]"
+            >
+                <BarChart
+                    accessibilityLayer
+                    data={[
+                        { month: "January", desktop: 186 },
+                        { month: "February", desktop: 305 },
+                        { month: "March", desktop: 237 },
+                        { month: "April", desktop: 73 },
+                        { month: "May", desktop: 209 },
+                        { month: "June", desktop: 214 },
+                    ]}
+                >
+                    <CartesianGrid vertical={false} />
+                    <XAxis
+                        dataKey="month"
+                        tickLine={false}
+                        tickMargin={10}
+                        axisLine={false}
+                        tickFormatter={(value) => value.slice(0, 3)}
+                    />
+                    <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+                    <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8} />
+                </BarChart>
+            </ChartContainer>
+        </div>
+    );
+}
+
+function FilterIcon(props) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+        </svg>
+    );
+}
+
+function LayoutDashboardIcon(props) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <rect width="7" height="9" x="3" y="3" rx="1" />
+            <rect width="7" height="5" x="14" y="3" rx="1" />
+            <rect width="7" height="9" x="14" y="12" rx="1" />
+            <rect width="7" height="5" x="3" y="16" rx="1" />
+        </svg>
+    );
+}
+
+function LinechartChart(props) {
+    return (
+        <div {...props}>
+            <ChartContainer
+                config={{
+                    desktop: {
+                        label: "Desktop",
+                        color: "hsl(var(--chart-1))",
+                    },
+                }}
+            >
+                <LineChart
+                    accessibilityLayer
+                    data={[
+                        { month: "January", desktop: 186 },
+                        { month: "February", desktop: 305 },
+                        { month: "March", desktop: 237 },
+                        { month: "April", desktop: 73 },
+                        { month: "May", desktop: 209 },
+                        { month: "June", desktop: 214 },
+                    ]}
+                    margin={{
+                        left: 12,
+                        right: 12,
+                    }}
+                >
+                    <CartesianGrid vertical={false} />
+                    <XAxis
+                        dataKey="month"
+                        tickLine={false}
+                        axisLine={false}
+                        tickMargin={8}
+                        tickFormatter={(value) => value.slice(0, 3)}
+                    />
+                    <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+                    <Line
+                        dataKey="desktop"
+                        type="natural"
+                        stroke="var(--color-desktop)"
+                        strokeWidth={2}
+                        dot={false}
+                    />
+                </LineChart>
+            </ChartContainer>
+        </div>
+    );
+}
+
+function MoveIcon(props) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <polyline points="5 9 2 12 5 15" />
+            <polyline points="9 5 12 2 15 5" />
+            <polyline points="15 19 12 22 9 19" />
+            <polyline points="19 9 22 12 19 15" />
+            <line x1="2" x2="22" y1="12" y2="12" />
+            <line x1="12" x2="12" y1="2" y2="22" />
+        </svg>
+    );
+}
+
 export {
     CreditCardIcon,
+    BellIcon,
+    XIcon,
     DollarSignIcon,
     LogOutIcon,
     MenuIcon,
@@ -266,4 +504,11 @@ export {
     UserIcon,
     BanknoteIcon,
     SunMoonIcon,
+    LinechartChart,
+    BarchartChart,
+    MoveIcon,
+    LayoutDashboardIcon,
+    FilterIcon,
+    ArrowUpIcon,
+    ArrowDownIcon,
 };
