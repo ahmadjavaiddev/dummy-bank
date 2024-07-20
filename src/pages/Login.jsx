@@ -11,8 +11,9 @@ import {
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../lib/axiosInstance";
 import toast from "react-hot-toast";
+import { LocalStorage } from "../lib/localStorage";
+import { loginUser, registerUser } from "../api/index";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -33,11 +34,11 @@ const Login = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await axiosInstance.post(`/users/login`, {
-                email: user.email,
-                password: user.password,
-            });
-            navigate(`/verify/login/${response.data.data?.user?._id}`);
+            const response = await loginUser({ email: user.email, password: user.password });
+            LocalStorage.set("accessToken", response.data.data.accessToken);
+            LocalStorage.set("refreshToken", response.data.data.refreshToken);
+
+            navigate(`/admin`);
             toast.success("Login SuccessFull!");
         } catch (error) {
             toast.error("Error logging in user!");
@@ -49,14 +50,12 @@ const Login = () => {
             if (user.confirmPassword !== user.password) {
                 return;
             }
-            const response = await axiosInstance.post(`/users/register`, {
-                firstName: user.firstName,
-                lastName: user.lastName,
-                userName: user.userName,
-                email: user.email,
-                password: user.password,
-            });
-            navigate(`/verify/register/${response.data.data?.user?._id}`);
+
+            const response = await registerUser(user);
+            LocalStorage.set("accessToken", response.data.data.accessToken);
+            LocalStorage.set("refreshToken", response.data.data.refreshToken);
+
+            navigate(`/admin`);
             toast.success("Registration SuccessFull!");
         } catch (error) {
             toast.error("Error Registering user!");
