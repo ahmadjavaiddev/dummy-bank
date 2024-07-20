@@ -1,30 +1,41 @@
-import { Outlet, useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
-import axiosInstance from "./lib/axiosInstance";
 import { useEffect } from "react";
+import io from "socket.io-client";
+import { LocalStorage } from "./lib/localStorage";
+import { useDispatch } from "react-redux";
+import { setNewNotification } from "./app/features/generalSlice";
+import { setNewTransaction } from "./app/features/transactionSlice";
 
-function Layout() {
-    const navigate = useNavigate();
-
-    const verifyUser = async () => {
-        try {
-            const response = await axiosInstance.get(`/users/check-verify-user`);
-            const data = response.data;
-
-            if (!data.IP) {
-                navigate(`/verify/ip/${data.userId}`);
-            }
-        } catch (error) {
-            toast.error("Error while verifying user!");
-            navigate("/");
-        }
-    };
+// eslint-disable-next-line react/prop-types
+function Layout({ children }) {
+    const dispatch = useDispatch((state) => state.general);
 
     useEffect(() => {
-        verifyUser();
-    }, [navigate]);
+        const token = LocalStorage.get("accessToken");
+        const socket = io(import.meta.env.VITE_SOCKET_URL, {
+            extraHeaders: {
+                authorization: token,
+            },
+        });
+
+        socket.on("connect", () => {
+            console.log("Connected To Socket");
+        });
+        socket.on("notifications", (data) => {
+            console.log("Received notification:", data);
+            dispatch(setNewNotification(data));
+        });
+        socket.on("transactions", (data) => {
+            console.log("Received transaction:", data);
+            dispatch(setNewTransaction(data));
+        });
+
+        return () => {
+            socket.disconnect();
+        };
+    }, []);
 
     return (
         <>
@@ -33,7 +44,7 @@ function Layout() {
                 <Sidebar />
                 <div className="flex-1">
                     <Header />
-                    <Outlet />
+                    {children}
                 </div>
             </div>
         </>
