@@ -53,4 +53,15 @@ const getTransactions = () => {
     return apiClient.get("/transactions");
 };
 
-export { loginUser, registerUser, validateUser, getNotifications, getTransactions };
+const requestCard = (pinCode) => {
+    return apiClient.post("/card/create", { pinCode: pinCode });
+};
+
+export {
+    loginUser,
+    registerUser,
+    validateUser,
+    getNotifications,
+    getTransactions,
+    requestCard,
+};
