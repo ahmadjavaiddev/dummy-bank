@@ -35,7 +35,7 @@ function Layout({ children }) {
         return () => {
             socket.disconnect();
         };
-    }, []);
+    }, [dispatch]);
 
     return (
         <>

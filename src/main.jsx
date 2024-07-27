@@ -17,6 +17,7 @@ import { AuthProvider } from "./context/AuthContext.jsx";
 import ProtectedRoute from "./layouts/ProtectedRoute.jsx";
 import PublicRoute from "./layouts/PublicRoute.jsx";
 import { LoadingProvider } from "./context/LoadingContext.jsx";
+import CardPage from "./pages/Card.jsx";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -47,10 +48,18 @@ const router = createBrowserRouter(
                 }
             />
             <Route
-                path="request-money"
+                path="/admin/request-money"
                 element={
                     <ProtectedRoute>
                         <RequestMoney />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/admin/credit-card"
+                element={
+                    <ProtectedRoute>
+                        <CardPage />
                     </ProtectedRoute>
                 }
             />
