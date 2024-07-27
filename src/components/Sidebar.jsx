@@ -81,50 +81,53 @@ const Sidebar = () => {
                 !sidebarToggle ? "hidden" : "block"
             } w-64 flex-col border-r bg-background p-6 md:flex`}
         >
-            <div className="flex items-center gap-2">
-                <Avatar className="h-10 w-10 border">
-                    <AvatarImage src="/placeholder-user.jpg" />
-                    <AvatarFallback>
-                        {user?.firstName[0].toUpperCase() + user?.lastName[0].toUpperCase()}
-                    </AvatarFallback>
-                </Avatar>
-                <div className="grid gap-0.5">
-                    <div className="font-semibold">{user?.userName}</div>
-                    <div className="text-sm text-muted-foreground">{user?.email}</div>
-                </div>
-            </div>
-            <Separator className="my-6" />
-            <nav className="grid gap-2">
-                {navMenu.map((item) => {
-                    const IconComponent = icons[item.iconName];
-                    return (
-                        <Link
-                            key={item.slug}
-                            to={item.slug}
-                            className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground"
-                        >
-                            <IconComponent className="h-5 w-5" />
-                            {item.title}
-                        </Link>
-                    );
-                })}
-            </nav>
-            <Separator className="my-6" />
-            <div className="grid gap-2">
+            <div className="sticky top-6 z-10">
                 <div className="flex items-center gap-2">
-                    <DollarSignIcon className="h-5 w-5 text-primary" />
-                    <div>
-                        <div className="text-sm font-medium">Account Balance</div>
-                        <div className="text-2xl font-semibold">
-                            ${formatAmount(user?.balance)}
-                        </div>
+                    <Avatar className="h-10 w-10 border">
+                        <AvatarImage src="/placeholder-user.jpg" />
+                        <AvatarFallback>
+                            {user?.firstName[0].toUpperCase() +
+                                user?.lastName[0].toUpperCase()}
+                        </AvatarFallback>
+                    </Avatar>
+                    <div className="grid gap-0.5">
+                        <div className="font-semibold">{user?.userName}</div>
+                        <div className="text-sm text-muted-foreground">{user?.email}</div>
                     </div>
                 </div>
-                <div className="flex items-center gap-2">
-                    <CreditCardIcon className="h-5 w-5 text-primary" />
-                    <div>
-                        <div className="text-sm font-medium">Credit Card</div>
-                        <div className="text-lg font-semibold">**** **** **** 1234</div>
+                <Separator className="my-6" />
+                <nav className="grid gap-2">
+                    {navMenu.map((item) => {
+                        const IconComponent = icons[item.iconName];
+                        return (
+                            <Link
+                                key={item.slug}
+                                to={item.slug}
+                                className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground"
+                            >
+                                <IconComponent className="h-5 w-5" />
+                                {item.title}
+                            </Link>
+                        );
+                    })}
+                </nav>
+                <Separator className="my-6" />
+                <div className="grid gap-2">
+                    <div className="flex items-center gap-2">
+                        <DollarSignIcon className="h-5 w-5 text-primary" />
+                        <div>
+                            <div className="text-sm font-medium">Account Balance</div>
+                            <div className="text-2xl font-semibold">
+                                ${formatAmount(user?.balance)}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <CreditCardIcon className="h-5 w-5 text-primary" />
+                        <div>
+                            <div className="text-sm font-medium">Credit Card</div>
+                            <div className="text-lg font-semibold">**** **** **** 1234</div>
+                        </div>
                     </div>
                 </div>
             </div>
