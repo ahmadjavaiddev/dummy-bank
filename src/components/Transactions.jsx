@@ -22,7 +22,7 @@ import {
 } from "./ui/dropdown-menu";
 
 // eslint-disable-next-line react/prop-types
-const Transactions = () => {
+const Transactions = ({ limit = 5, showDescription = true }) => {
     const transactions = useSelector((state) => state.transaction.transactions);
     const dispatch = useDispatch();
     const { user } = useAuth();
@@ -75,7 +75,8 @@ const Transactions = () => {
                             <TableRow>
                                 <TableHead>User</TableHead>
                                 <TableHead>Date</TableHead>
-                                <TableHead>Description</TableHead>
+                                {showDescription && <TableHead>Description</TableHead>}
+
                                 <TableHead>Amount</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead>Action</TableHead>
@@ -83,7 +84,7 @@ const Transactions = () => {
                         </TableHeader>
                         <TableBody>
                             {transactions.length > 0 ? (
-                                transactions.map((transaction) => {
+                                transactions?.slice(0, limit)?.map((transaction) => {
                                     const isFromUser = transaction.from.email === user.email;
                                     const displayUser = isFromUser
                                         ? transaction.to
@@ -116,7 +117,11 @@ const Transactions = () => {
                                                     .add("TIME_ZONE", "hours")
                                                     .fromNow(true)}
                                             </TableCell>
-                                            <TableCell>{transaction.description}</TableCell>
+                                            {showDescription && (
+                                                <TableCell>
+                                                    {transaction.description}
+                                                </TableCell>
+                                            )}
 
                                             <TableCell>
                                                 <span
@@ -142,7 +147,13 @@ const Transactions = () => {
                                     );
                                 })
                             ) : (
-                                <div className="grid gap-4">Transactions Not Found!</div>
+                                <TableRow>
+                                    <TableCell colSpan={6}>
+                                        <span className="grid gap-4">
+                                            Transactions Not Found!
+                                        </span>
+                                    </TableCell>
+                                </TableRow>
                             )}
                         </TableBody>
                     </Table>
