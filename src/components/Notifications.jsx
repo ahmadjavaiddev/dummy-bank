@@ -22,16 +22,15 @@ const Notifications = () => {
         (async () => {
             try {
                 const response = await getNotifications();
-                console.log("response.data.data ::", response.data.data);
                 dispatch(setNotifications(response.data.data));
             } catch (error) {
                 console.log("Error in notifications ::", error);
             }
         })();
-    }, []);
+    }, [dispatch]);
 
     return (
-        <Card className={"w-[300px]"}>
+        <Card className={""}>
             <CardHeader>
                 <CardTitle>Notifications</CardTitle>
                 <CardDescription>You have 3 unread messages.</CardDescription>

@@ -11,16 +11,15 @@ import {
 } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { toggleSidebar } from "../app/features/generalSlice.js";
 import { BellIcon } from "lucide-react";
-import moment from "moment";
+import Notifications from "./Notifications.jsx";
 
 const Header = () => {
     const [isDark, setIsDark] = useState(
         () => localStorage.getItem("theme") === "dark" || !localStorage.getItem("theme")
     );
-    const notifications = useSelector((state) => state.general.notifications);
     const dispatch = useDispatch((state) => state.general);
 
     const toggleSideBar = () => {
@@ -67,27 +66,7 @@ const Header = () => {
                                     Mark all as read
                                 </Button>
                             </div>
-                            {notifications.length > 0 ? (
-                                notifications?.slice(0, 10)?.map((notification) => (
-                                    <div key={notification._id} className="space-y-4 mb-4">
-                                        <div className="flex items-start gap-3">
-                                            <div className="flex h-2 w-2 rounded-full bg-blue-500 mt-1" />
-                                            <div className="flex-1">
-                                                <p className="text-sm font-medium">
-                                                    {notification.message}
-                                                </p>
-                                                <p className="text-xs text-muted-foreground">
-                                                    {moment(notification.updatedAt)
-                                                        .add("TIME_ZONE", "hours")
-                                                        .fromNow(true)}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <div>Notifications Not Found</div>
-                            )}
+                            <Notifications />
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
