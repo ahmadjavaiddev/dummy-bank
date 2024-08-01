@@ -85,7 +85,7 @@ const Transactions = ({ limit = 5, showDescription = true }) => {
                         <TableBody>
                             {transactions.length > 0 ? (
                                 transactions?.slice(0, limit)?.map((transaction) => {
-                                    const isFromUser = transaction.from.email === user.email;
+                                    const isFromUser = transaction.from?.email === user?.email;
                                     const displayUser = isFromUser
                                         ? transaction.to
                                         : transaction.from;

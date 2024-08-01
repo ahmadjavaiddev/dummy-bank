@@ -10,23 +10,24 @@ export const useAuth = () => useContext(AuthContext);
 
 // eslint-disable-next-line react/prop-types
 const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState(null);
     const [token, setToken] = useState(LocalStorage.get("accessToken"));
-    const { setLoading } = useLoading();
+    const {  setLoading } = useLoading();
 
     useLayoutEffect(() => {
         (async () => {
+            setLoading(true);
             try {
                 const response = await validateUser();
                 if (!response.data.data.isLoggedIn) {
                     setUser(null);
-                    setLoading(false);
+                } else {
+                    setUser(response.data.data);
                 }
-                setUser(response.data.data);
-                setLoading(false);
             } catch (error) {
                 console.log("Error while verifying user!");
                 setUser(null);
+            } finally {
                 setLoading(false);
             }
         })();

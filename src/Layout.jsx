@@ -11,6 +11,7 @@ import { setNewTransaction } from "./app/features/transactionSlice";
 // eslint-disable-next-line react/prop-types
 function Layout({ children }) {
     const dispatch = useDispatch((state) => state.general);
+    // const { loading } = useLoading();
 
     useEffect(() => {
         const token = LocalStorage.get("accessToken");

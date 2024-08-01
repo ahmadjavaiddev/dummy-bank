@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useLoading } from "../context/LoadingContext";
@@ -7,12 +7,17 @@ import { useLoading } from "../context/LoadingContext";
 const PublicRoute = ({ children }) => {
     const { user, token } = useAuth();
     const { loading } = useLoading();
+    const location = useLocation();
 
-    if (user?._id && token) {
-        return <Navigate to="/admin" />;
+    if (loading) {
+        return <LoadingSpinner />;
     }
 
-    return loading ? <LoadingSpinner /> : children;
+    if (user?._id && token) {
+        return <Navigate to="/admin" state={{ from: location }} />;
+    }
+
+    return children;
 };
 
 export default PublicRoute;
