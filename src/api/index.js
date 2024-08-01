@@ -65,6 +65,11 @@ const getCardDetails = async () => {
     return response.data.data.card;
 };
 
+const verifyUserLogin = async (token) => {
+    const response = await apiClient.get(`/users/verify/${token}`);
+    return response.data.data;
+};
+
 export {
     loginUser,
     registerUser,
@@ -73,4 +78,5 @@ export {
     getTransactions,
     requestCard,
     getCardDetails,
+    verifyUserLogin,
 };

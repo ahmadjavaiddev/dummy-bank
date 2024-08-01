@@ -12,7 +12,7 @@ export const useAuth = () => useContext(AuthContext);
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(LocalStorage.get("accessToken"));
-    const {  setLoading } = useLoading();
+    const { setLoading } = useLoading();
 
     useLayoutEffect(() => {
         (async () => {

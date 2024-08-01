@@ -30,7 +30,14 @@ const router = createBrowserRouter(
                     </PublicRoute>
                 }
             />
-            <Route path="/verify/:type/:id" element={<Verify />} />
+            <Route
+                path="/verify/:userToken"
+                element={
+                    <PublicRoute>
+                        <Verify />
+                    </PublicRoute>
+                }
+            />
             <Route
                 path="/admin"
                 element={

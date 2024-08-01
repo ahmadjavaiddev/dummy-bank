@@ -1,124 +1,50 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import {
-    InputOTP,
-    InputOTPGroup,
-    InputOTPSeparator,
-    InputOTPSlot,
-} from "../components/ui/input-otp";
-import axios from "axios";
-import toast from "react-hot-toast";
+import { useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../components/ui/card";
-const apiUrl = import.meta.env.VITE_API_URL;
-import axiosInstance from "../lib/axiosInstance";
+import { verifyUserLogin } from "../api";
+import { useNavigate, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
+import { Button } from "../components/ui/button";
 
 const Verify = () => {
-    const { type, id } = useParams();
-    const [otp, setOtp] = useState("");
     const navigate = useNavigate();
+    const { userToken } = useParams();
+    const [error, setError] = useState("");
 
-    const handleOtpChange = (newOtp) => {
-        setOtp(newOtp);
-    };
-
-    const handleVerification = async (typeOfVerification) => {
+    const handleUserVerification = async () => {
         try {
-            const response = await axios.post(`${apiUrl}/users/verify-user`, {
-                userId: id,
-                verificationCode: otp,
-                type: typeOfVerification,
-            });
+            const response = await verifyUserLogin(userToken);
+            console.log("User verified ::", response);
 
+            toast.success("User verified successfully");
+            // Redirect to dashboard
             navigate("/admin");
-            toast.success("Verification SuccessFull!");
         } catch (error) {
-            toast.error("Invalid Verification Code!");
-        }
-    };
-
-    useEffect(() => {
-        (async () => {
-            try {
-                const response = await axiosInstance.get(`/users/have-otp/${id}`);
-
-                if (!response.data.exists) {
-                    navigate("/admin");
-                }
-            } catch (error) {
-                console.log("Error user doesn't have any OTP request");
-            }
-        })();
-
-        if (otp.length === 6 && id) {
-            const typeOfVerification =
-                type === "login" ? "LOGIN" : type === "register" ? "REGISTER" : "IP";
-            handleVerification(typeOfVerification);
-        }
-    }, [type, otp, id]);
-
-    const instructionsTitle = () => {
-        if (type === "register") {
-            const text = "Verify Your Email";
-            return text;
-        }
-        if (type === "login") {
-            const text = "Verify Your Login";
-            return text;
-        }
-        if (type === "ip") {
-            const text = "Verify Your IP Address";
-            return text;
-        }
-    };
-    const instructionsDescription = () => {
-        if (type === "register") {
-            const text =
-                "Before continue please verify your email by using OTP sent to your email. Please check your inbox.";
-            return text;
-        }
-        if (type === "login") {
-            const text =
-                "Before continue please verify your Login by using OTP sent to your email. Please check your inbox.";
-            return text;
-        }
-        if (type === "ip") {
-            const text =
-                "Before continue please verify your IP Address by using OTP sent to your email. Please check your inbox.";
-            return text;
+            console.log("Error verifying user ::", error);
+            toast.error("Invalid Verification Link");
+            setError("Invalid Verification Link");
         }
     };
 
     return (
-        <div className="flex flex-col justify-center items-center h-[100vh] w-72 mx-auto">
+        <div className="flex flex-col justify-center items-center h-[100vh] w-[400px] mx-auto">
             <Card className="flex flex-col justify-center items-center">
                 <CardHeader className="pb-2">
-                    <CardTitle className="text-lg">{instructionsTitle()}</CardTitle>
+                    <p className="text-lg text-center mt-3 mb-5">
+                        {error && <span className="text-red-500">{error}</span>}
+                    </p>
+                    <CardTitle className="text-2xl">Verify Your Action</CardTitle>
                 </CardHeader>
-                <CardContent>
-                    <p className="text-sm text-center mb-5">{instructionsDescription()}</p>
-                    <InputOTP
-                        maxLength={6}
-                        value={otp}
-                        onChange={handleOtpChange}
-                        className="otp-container"
-                        containerClassName="otp-inner-container"
-                    >
-                        <InputOTPGroup>
-                            <InputOTPSlot index={0} />
-                            <InputOTPSlot index={1} />
-                            <InputOTPSlot index={2} />
-                        </InputOTPGroup>
-                        <InputOTPSeparator />
-                        <InputOTPGroup>
-                            <InputOTPSlot index={3} />
-                            <InputOTPSlot index={4} />
-                            <InputOTPSlot index={5} />
-                        </InputOTPGroup>
-                    </InputOTP>
+                <CardContent className={"text-center"}>
+                    <p className="text-lg text-center mt-3 mb-5">
+                        Please check Your email inbox to verify your login.
+                    </p>
+                    <Button onClick={handleUserVerification} size="full">
+                        Verify
+                    </Button>
                 </CardContent>
                 <CardFooter>
                     <p className="text-sm w-full flex justify-center items-center">
-                        Didn't receive OTP? <span className="text-blue-500">Resend</span>
+                        Didnt receive OTP? <span className="text-blue-500">Resend</span>
                     </p>
                 </CardFooter>
             </Card>
