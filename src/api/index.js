@@ -33,8 +33,11 @@ apiClient.interceptors.request.use(
     }
 );
 
-const loginUser = ({ email, password }) => {
-    return apiClient.post("/users/login", { email, password });
+const loginUser = async ({ email, password }) => {
+    const response = await apiClient.post("/users/login", { email, password });
+    LocalStorage.set("accessToken", response.data.data.accessToken);
+    LocalStorage.set("refreshToken", response.data.data.refreshToken);
+    return response.data.data;
 };
 const registerUser = (user) => {
     const { firstName, lastName, userName, email, password } = user;

@@ -3,10 +3,6 @@ export function formatAmount(amount) {
 }
 
 export function formatCardNumber(cardNumber) {
-    // Remove non-digit characters
-    // const cleanedCardNumber = cardNumber.replace(/\D/g, "");
-    // console.log("Length ::", cardNumber.length);
-
     const editedCard = cardNumber
         .split("")
         .map((char, index) => char + (index % 4 === 3 ? " " : ""))
@@ -20,6 +16,5 @@ export function formatCardNumber(cardNumber) {
         return "Invalid card number length";
     }
 
-    // Format with hyphens
     return editedCard;
 }
