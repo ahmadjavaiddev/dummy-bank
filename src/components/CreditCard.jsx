@@ -1,9 +1,27 @@
+import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { PencilIcon, TrashIcon } from "../lib/icons";
-import { Button } from "./ui/button";
+// import { PencilIcon, TrashIcon } from "../lib/icons";
+// import { Button } from "./ui/button";
+import { getCardDetails } from "../api";
+import { formatCardNumber } from "../helpers";
 
 const CreditCard = () => {
     const { user } = useAuth();
+
+    const [card, setCard] = useState({});
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const response = await getCardDetails();
+
+                console.log("Response Card ::", response);
+                setCard(response);
+            } catch (error) {
+                console.log("Error while fetching card details ::", error);
+            }
+        })();
+    }, []);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-[70vh] bg-background">
@@ -13,7 +31,6 @@ const CreditCard = () => {
                         <div className="max-w-md w-full space-y-6">
                             <div className="flex items-center justify-between">
                                 <h1 className="text-2xl font-bold">Credit Card Details</h1>
-                                {/* <div className="text-muted-foreground">John Doe</div> */}
                             </div>
                             <div className="bg-card rounded-2xl shadow-lg overflow-hidden relative">
                                 <div className="absolute inset-0 bg-gradient-to-br from-primary to-secondary opacity-10" />
@@ -23,7 +40,8 @@ const CreditCard = () => {
                                         <div className="text-sm">Visa</div>
                                     </div>
                                     <div className="text-3xl font-bold tracking-wider mb-4">
-                                        4111 1111 1111 1111
+                                        {card?.cardNumber &&
+                                            formatCardNumber(card?.cardNumber)}
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <div>
@@ -36,7 +54,9 @@ const CreditCard = () => {
                                             <div className="text-sm text-muted-foreground">
                                                 CVV
                                             </div>
-                                            <div className="text-lg font-medium">123</div>
+                                            <div className="text-lg font-medium">
+                                                {card.cvv}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -48,20 +68,22 @@ const CreditCard = () => {
                             <div className="text-sm font-medium text-muted-foreground">
                                 Card Number
                             </div>
-                            <div className="text-2xl font-bold">1234 5678 9012 3456</div>
+                            <div className="text-2xl font-bold">
+                                {card?.cardNumber && formatCardNumber(card?.cardNumber)}
+                            </div>
                         </div>
                         <div className="grid grid-cols-2 gap-2">
                             <div>
                                 <div className="text-sm font-medium text-muted-foreground">
                                     Expires
                                 </div>
-                                <div className="text-xl font-bold">12/24</div>
+                                <div className="text-xl font-bold">{card.expiryDate}</div>
                             </div>
                             <div>
                                 <div className="text-sm font-medium text-muted-foreground">
                                     CVV
                                 </div>
-                                <div className="text-xl font-bold">123</div>
+                                <div className="text-xl font-bold">{card.cvv}</div>
                             </div>
                         </div>
                         <div className="grid gap-2">
@@ -72,7 +94,7 @@ const CreditCard = () => {
                                 {user.firstName.toUpperCase()} {user.lastName.toUpperCase()}
                             </div>
                         </div>
-                        <div className="flex items-center gap-4">
+                        {/* <div className="flex items-center gap-4">
                             <Button variant="outline" size="sm">
                                 <PencilIcon className="w-4 h-4" />
                                 Edit
@@ -81,7 +103,7 @@ const CreditCard = () => {
                                 <TrashIcon className="w-4 h-4" />
                                 Remove
                             </Button>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

@@ -57,6 +57,11 @@ const requestCard = (pinCode) => {
     return apiClient.post("/card/create", { pinCode: pinCode });
 };
 
+const getCardDetails = async () => {
+    const response = await apiClient.get("/card/get");
+    return response.data.data.card;
+};
+
 export {
     loginUser,
     registerUser,
@@ -64,4 +69,5 @@ export {
     getNotifications,
     getTransactions,
     requestCard,
+    getCardDetails,
 };
