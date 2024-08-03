@@ -27,7 +27,6 @@ const Login = () => {
         password: "",
         confirmPassword: "",
     });
-
     const handleFormSwitch = () => {
         setActiveLogin(!activeLogin);
     };

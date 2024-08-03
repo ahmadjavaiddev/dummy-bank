@@ -12,8 +12,7 @@ const Verify = () => {
 
     const handleUserVerification = async () => {
         try {
-            const response = await verifyUserLogin(userToken);
-            console.log("User verified ::", response);
+            await verifyUserLogin(userToken);
 
             toast.success("User verified successfully");
             // Redirect to dashboard

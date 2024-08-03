@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { useDispatch, useSelector } from "react-redux";
 import { useAuth } from "../context/AuthContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getTransactions } from "../api";
 import { setTransactions } from "../app/features/transactionSlice";
 import { formatAmount } from "../helpers";
@@ -20,29 +20,41 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import Spinner from "./Spinner";
 
 // eslint-disable-next-line react/prop-types
-const Transactions = ({ limit = 5, showDescription = true }) => {
+const Transactions = ({ limit = 20, showDescription = true, showIndex = true }) => {
     const transactions = useSelector((state) => state.transaction.transactions);
     const dispatch = useDispatch();
     const { user } = useAuth();
+    const [loading, setLoading] = useState(true);
+
+    const handleReloadTransactions = async () => {
+        setLoading(true);
+        try {
+            const response = await getTransactions();
+            dispatch(setTransactions(response.data.data.transactions));
+        } catch (error) {
+            console.error("Error fetching transactions", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        (async () => {
-            try {
-                const response = await getTransactions();
-                dispatch(setTransactions(response.data.data.transactions));
-            } catch (error) {
-                console.error("Error fetching transactions", error);
-            }
-        })();
+        handleReloadTransactions();
     }, [dispatch]);
 
     return (
-        <div className="mt-6 w-full">
+        <div className="w-full">
             <Card>
                 <CardHeader>
-                    <CardTitle>Recent Transactions</CardTitle>
+                    <CardTitle className={"flex justify-between"}>
+                        <span>Recent Transactions </span>
+                        <Button variant="outline" size="sm" onClick={handleReloadTransactions}>
+                            Reload
+                        </Button>
+                    </CardTitle>
                     <div className="flex items-center gap-2">
                         <Input
                             type="search"
@@ -73,24 +85,35 @@ const Transactions = ({ limit = 5, showDescription = true }) => {
                     <Table>
                         <TableHeader>
                             <TableRow>
+                                {showIndex && <TableHead>Index</TableHead>}
                                 <TableHead>User</TableHead>
                                 <TableHead>Date</TableHead>
                                 {showDescription && <TableHead>Description</TableHead>}
-
                                 <TableHead>Amount</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead>Action</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {transactions.length > 0 ? (
-                                transactions?.slice(0, limit)?.map((transaction) => {
+                            {loading ? (
+                                <TableRow>
+                                    <TableCell colSpan={7}>
+                                        <Spinner />
+                                    </TableCell>
+                                </TableRow>
+                            ) : transactions.length > 0 ? (
+                                transactions?.slice(0, limit)?.map((transaction, index) => {
                                     const isFromUser = transaction.from?.email === user?.email;
                                     const displayUser = isFromUser
                                         ? transaction.to
                                         : transaction.from;
                                     return (
                                         <TableRow key={transaction._id}>
+                                            {showIndex && (
+                                                <TableCell className={"w-5"}>
+                                                    {++index}
+                                                </TableCell>
+                                            )}
                                             <TableCell>
                                                 <span className="flex gap-3">
                                                     <Avatar className="h-8 w-8 border">
@@ -115,7 +138,8 @@ const Transactions = ({ limit = 5, showDescription = true }) => {
                                             <TableCell>
                                                 {moment(transaction.updatedAt)
                                                     .add("TIME_ZONE", "hours")
-                                                    .fromNow(true)}
+                                                    .fromNow(true)}{" "}
+                                                ago
                                             </TableCell>
                                             {showDescription && (
                                                 <TableCell>

@@ -64,7 +64,7 @@ const Home = () => {
                         </Card>
                     </div>
                     <div className="flex gap-5">
-                        <Transactions showDescription={false} />
+                        <Transactions limit={5} showDescription={false} showIndex={false} />
 
                         <div className="mt-6 w-full">
                             <Card>

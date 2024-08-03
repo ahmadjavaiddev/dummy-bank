@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-// import { PencilIcon, TrashIcon } from "../lib/icons";
-// import { Button } from "./ui/button";
 import { getCardDetails } from "../api";
 import { formatCardNumber } from "../helpers";
+import Spinner from "./Spinner";
 
 const CreditCard = () => {
     const { user } = useAuth();
-
+    const [loading, setLoading] = useState(true);
     const [card, setCard] = useState({});
 
     useEffect(() => {
@@ -19,10 +18,18 @@ const CreditCard = () => {
                 setCard(response);
             } catch (error) {
                 console.log("Error while fetching card details ::", error);
+            } finally {
+                setLoading(false);
             }
         })();
     }, []);
-
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[70vh]">
+                <Spinner />
+            </div>
+        );
+    }
     return (
         <div className="flex flex-col items-center justify-center min-h-[70vh] bg-background">
             <div className="w-full max-w-4xl px-4 py-8 md:px-6 border rounded-lg">

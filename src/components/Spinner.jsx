@@ -1,11 +1,6 @@
-import { useLoading } from "../context/LoadingContext";
-
-function LoadingSpinner() {
-    const { loading } = useLoading();
-
-    if (!loading) return null;
+function Spinner() {
     return (
-        <div className={`flex justify-center items-center h-[98vh]`}>
+        <div className={`flex text-center justify-center items-center h-[100px]`}>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -25,4 +20,4 @@ function LoadingSpinner() {
     );
 }
 
-export default LoadingSpinner;
+export default Spinner;

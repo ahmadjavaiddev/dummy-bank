@@ -31,7 +31,7 @@ const AuthProvider = ({ children }) => {
                 setLoading(false);
             }
         })();
-    }, []);
+    }, [setLoading]);
 
     const values = { user, setUser, token, setToken };
 

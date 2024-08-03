@@ -18,6 +18,7 @@ import ProtectedRoute from "./layouts/ProtectedRoute.jsx";
 import PublicRoute from "./layouts/PublicRoute.jsx";
 import { LoadingProvider } from "./context/LoadingContext.jsx";
 import CardPage from "./pages/Card.jsx";
+import Transactions from "./components/Transactions.jsx";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -59,6 +60,14 @@ const router = createBrowserRouter(
                 element={
                     <ProtectedRoute>
                         <RequestMoney />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/admin/transactions"
+                element={
+                    <ProtectedRoute>
+                        <Transactions />
                     </ProtectedRoute>
                 }
             />
