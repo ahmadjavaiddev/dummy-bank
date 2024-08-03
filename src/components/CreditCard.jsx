@@ -101,16 +101,6 @@ const CreditCard = () => {
                                 {user.firstName.toUpperCase()} {user.lastName.toUpperCase()}
                             </div>
                         </div>
-                        {/* <div className="flex items-center gap-4">
-                            <Button variant="outline" size="sm">
-                                <PencilIcon className="w-4 h-4" />
-                                Edit
-                            </Button>
-                            <Button variant="outline" size="sm">
-                                <TrashIcon className="w-4 h-4" />
-                                Remove
-                            </Button>
-                        </div> */}
                     </div>
                 </div>
             </div>

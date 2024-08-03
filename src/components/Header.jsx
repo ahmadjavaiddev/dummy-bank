@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import "./style/Header.css";
 import { Button } from "./ui/button";
-import { LogOutIcon, MenuIcon, SettingsIcon, SunMoonIcon, UserIcon } from "../lib/icons.jsx";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -13,7 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { toggleSidebar } from "../app/features/generalSlice.js";
-import { BellIcon } from "lucide-react";
+import { BellIcon, LogOutIcon, MenuIcon, SettingsIcon, SunMoonIcon, UserIcon } from "lucide-react";
 import Notifications from "./Notifications.jsx";
 
 const Header = () => {

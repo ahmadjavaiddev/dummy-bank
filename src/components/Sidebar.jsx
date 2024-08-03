@@ -1,18 +1,18 @@
 import { Link, useLocation } from "react-router-dom";
 import "./style/Sidebar.css";
 import { useEffect, useState } from "react";
-import { SettingsIcon } from "lucide-react";
-import { Avatar, AvatarImage, AvatarFallback } from "../components/ui/avatar";
-import { Separator } from "../components/ui/separator";
 import {
     BanknoteIcon,
     CreditCardIcon,
     DollarSignIcon,
     ReplyIcon,
     SendIcon,
+    SettingsIcon,
     TicketIcon,
     UserIcon,
-} from "../lib/icons.jsx";
+} from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "../components/ui/avatar";
+import { Separator } from "../components/ui/separator";
 import { useSelector } from "react-redux";
 
 const navMenu = [
