@@ -1,5 +1,5 @@
 import { useState } from "react";
-import TransactionHistory from "../components/Transactions";
+import TransactionHistory from "../components/RecentTransactions";
 import { Button } from "../components/ui/button";
 import {
     Card,

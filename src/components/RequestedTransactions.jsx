@@ -1,39 +1,47 @@
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
+import { Button } from "./ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { useAuth } from "../context/AuthContext";
 import { useEffect, useState } from "react";
-import { getTransactions } from "../api";
-import { setTransactions } from "../app/features/transactionSlice";
+import { approveTransaction, getRequestedTransactions } from "../api";
+import { setRequestedTransactions } from "../app/features/transactionSlice";
 import { formatAmount } from "../helpers";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
-import { Badge } from "./ui/badge";
-import { Input } from "./ui/input";
-import { FilterIcon } from "lucide-react";
 import moment from "moment";
-import {
-    DropdownMenu,
-    DropdownMenuCheckboxItem,
-    DropdownMenuContent,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+import { AvatarImage } from "@radix-ui/react-avatar";
+import { Avatar, AvatarFallback } from "./ui/avatar";
 import Spinner from "./Spinner";
+import { RefreshCwIcon } from "lucide-react";
 
 // eslint-disable-next-line react/prop-types
-const Transactions = ({ limit = 20, showDescription = true, showIndex = true }) => {
-    const transactions = useSelector((state) => state.transaction.transactions);
+const RequestedTransactions = ({ limit = 10, showDescription = true, showIndex = true }) => {
+    const transactions = useSelector((state) => state.transaction.requestedTransactions);
     const dispatch = useDispatch();
     const { user } = useAuth();
     const [loading, setLoading] = useState(true);
 
+    const handleApproveTransaction = async (transactionId) => {
+        setLoading(true);
+        try {
+            const response = await approveTransaction(transactionId);
+            if (response.success) {
+                const removeApprovedTransaction = transactions.filter(
+                    (transaction) => transaction._id !== transactionId
+                );
+                dispatch(setRequestedTransactions(removeApprovedTransaction));
+            }
+        } catch (error) {
+            console.error("Error fetching transactions", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleReloadTransactions = async () => {
         setLoading(true);
         try {
-            const response = await getTransactions();
-            dispatch(setTransactions(response.data.data.transactions));
+            const response = await getRequestedTransactions();
+            dispatch(setRequestedTransactions(response));
         } catch (error) {
             console.error("Error fetching transactions", error);
         } finally {
@@ -50,48 +58,21 @@ const Transactions = ({ limit = 20, showDescription = true, showIndex = true }) 
             <Card>
                 <CardHeader>
                     <CardTitle className={"flex justify-between"}>
-                        <span>Recent Transactions </span>
+                        <span>Pending Requests</span>
                         <Button variant="outline" size="sm" onClick={handleReloadTransactions}>
-                            Reload
+                            <RefreshCwIcon className="h-5 w-5" />
                         </Button>
                     </CardTitle>
-                    <div className="flex items-center gap-2">
-                        <Input
-                            type="search"
-                            placeholder="Search transactions"
-                            className="max-w-xs"
-                        />
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="outline" size="sm">
-                                    <FilterIcon className="h-4 w-4 mr-2" />
-                                    Filter
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuCheckboxItem checked>
-                                    All
-                                </DropdownMenuCheckboxItem>
-                                <DropdownMenuCheckboxItem>Pending</DropdownMenuCheckboxItem>
-                                <DropdownMenuCheckboxItem>Completed</DropdownMenuCheckboxItem>
-                                <DropdownMenuCheckboxItem>Declined</DropdownMenuCheckboxItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
                 </CardHeader>
                 <CardContent>
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                {showIndex && <TableHead>Index</TableHead>}
                                 <TableHead>User</TableHead>
                                 <TableHead>Date</TableHead>
                                 {showDescription && <TableHead>Description</TableHead>}
                                 <TableHead>Amount</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead>Action</TableHead>
+                                <TableHead>Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -103,10 +84,11 @@ const Transactions = ({ limit = 20, showDescription = true, showIndex = true }) 
                                 </TableRow>
                             ) : transactions.length > 0 ? (
                                 transactions?.slice(0, limit)?.map((transaction, index) => {
-                                    const isFromUser = transaction.from?.email === user?.email;
+                                    const isFromUser =
+                                        transaction?.from?.email === user?.email;
                                     const displayUser = isFromUser
-                                        ? transaction.to
-                                        : transaction.from;
+                                        ? transaction?.to
+                                        : transaction?.from;
                                     return (
                                         <TableRow key={transaction._id}>
                                             {showIndex && (
@@ -146,26 +128,31 @@ const Transactions = ({ limit = 20, showDescription = true, showIndex = true }) 
                                                     {transaction.description}
                                                 </TableCell>
                                             )}
-
                                             <TableCell>
-                                                <span
-                                                    className={`font-medium ${
-                                                        isFromUser
-                                                            ? "text-red-500"
-                                                            : "text-green-500"
-                                                    }`}
-                                                >
-                                                    {isFromUser ? "-" : "+"}$
-                                                    {formatAmount(transaction.amount)}
-                                                </span>
+                                                ${formatAmount(transaction.amount)}
                                             </TableCell>
                                             <TableCell>
-                                                <Badge variant="secondary">
-                                                    {transaction.status}
-                                                </Badge>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Badge variant="secondary">VIEW</Badge>
+                                                <div className="flex items-center gap-2">
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                        className={"text-green-500 font-bold"}
+                                                        onClick={() =>
+                                                            handleApproveTransaction(
+                                                                transaction._id
+                                                            )
+                                                        }
+                                                    >
+                                                        Approve
+                                                    </Button>
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                        className={"text-red-500 font-bold"}
+                                                    >
+                                                        Reject
+                                                    </Button>
+                                                </div>
                                             </TableCell>
                                         </TableRow>
                                     );
@@ -179,6 +166,42 @@ const Transactions = ({ limit = 20, showDescription = true, showIndex = true }) 
                                     </TableCell>
                                 </TableRow>
                             )}
+                            {/* <TableRow>
+                                <TableCell>2023-04-18</TableCell>
+                                <TableCell>Bill Payment</TableCell>
+                                <TableCell>$125.00</TableCell>
+                                <TableCell>
+                                    <Badge variant="outline">Pending</Badge>
+                                </TableCell>
+                                <TableCell>
+                                    <div className="flex items-center gap-2">
+                                        <Button variant="outline" size="sm">
+                                            Approve
+                                        </Button>
+                                        <Button variant="outline" size="sm" color="red">
+                                            Reject
+                                        </Button>
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>2023-04-16</TableCell>
+                                <TableCell>Fund Transfer</TableCell>
+                                <TableCell>$500.00</TableCell>
+                                <TableCell>
+                                    <Badge variant="outline">Pending</Badge>
+                                </TableCell>
+                                <TableCell>
+                                    <div className="flex items-center gap-2">
+                                        <Button variant="outline" size="sm">
+                                            Approve
+                                        </Button>
+                                        <Button variant="outline" size="sm" color="red">
+                                            Reject
+                                        </Button>
+                                    </div>
+                                </TableCell>
+                            </TableRow> */}
                         </TableBody>
                     </Table>
                 </CardContent>
@@ -187,4 +210,4 @@ const Transactions = ({ limit = 20, showDescription = true, showIndex = true }) 
     );
 };
 
-export default Transactions;
+export default RequestedTransactions;

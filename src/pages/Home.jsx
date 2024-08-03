@@ -1,16 +1,7 @@
+import RecentTransactions from "../components/RecentTransactions";
+import RequestedTransactions from "../components/RequestedTransactions";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { ArrowDownIcon, ArrowUpIcon, CreditCardIcon } from "lucide-react";
-import { Button } from "../components/ui/button";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "../components/ui/table";
-import { Badge } from "../components/ui/badge";
-import Transactions from "../components/Transactions";
 
 const Home = () => {
     return (
@@ -63,75 +54,18 @@ const Home = () => {
                             </CardContent>
                         </Card>
                     </div>
-                    <div className="flex gap-5">
-                        <Transactions limit={5} showDescription={false} showIndex={false} />
+                    <div className="flex mt-5 gap-5">
+                        <RecentTransactions
+                            limit={5}
+                            showDescription={false}
+                            showIndex={false}
+                        />
 
-                        <div className="mt-6 w-full">
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>Pending Requests</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <Table>
-                                        <TableHeader>
-                                            <TableRow>
-                                                <TableHead>Date</TableHead>
-                                                <TableHead>Description</TableHead>
-                                                <TableHead>Amount</TableHead>
-                                                <TableHead>Status</TableHead>
-                                                <TableHead>Actions</TableHead>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
-                                            <TableRow>
-                                                <TableCell>2023-04-18</TableCell>
-                                                <TableCell>Bill Payment</TableCell>
-                                                <TableCell>$125.00</TableCell>
-                                                <TableCell>
-                                                    <Badge variant="outline">Pending</Badge>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <div className="flex items-center gap-2">
-                                                        <Button variant="outline" size="sm">
-                                                            Approve
-                                                        </Button>
-                                                        <Button
-                                                            variant="outline"
-                                                            size="sm"
-                                                            color="red"
-                                                        >
-                                                            Reject
-                                                        </Button>
-                                                    </div>
-                                                </TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell>2023-04-16</TableCell>
-                                                <TableCell>Fund Transfer</TableCell>
-                                                <TableCell>$500.00</TableCell>
-                                                <TableCell>
-                                                    <Badge variant="outline">Pending</Badge>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <div className="flex items-center gap-2">
-                                                        <Button variant="outline" size="sm">
-                                                            Approve
-                                                        </Button>
-                                                        <Button
-                                                            variant="outline"
-                                                            size="sm"
-                                                            color="red"
-                                                        >
-                                                            Reject
-                                                        </Button>
-                                                    </div>
-                                                </TableCell>
-                                            </TableRow>
-                                        </TableBody>
-                                    </Table>
-                                </CardContent>
-                            </Card>
-                        </div>
+                        <RequestedTransactions
+                            limit={5}
+                            showDescription={false}
+                            showIndex={false}
+                        />
                     </div>
                 </div>
             </main>
