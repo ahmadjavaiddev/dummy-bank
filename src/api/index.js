@@ -52,8 +52,19 @@ const getNotifications = () => {
     return apiClient.get("/notifications/get");
 };
 
-const getTransactions = () => {
-    return apiClient.get("/transactions");
+const getTransactions = async () => {
+    const response = await apiClient.get("/transactions");
+    return response.data.data.transactions;
+};
+
+const getRequestedTransactions = async () => {
+    const response = await apiClient.get("/transactions/requested");
+    return response.data.data.transactions;
+};
+
+const approveTransaction = async (transactionId) => {
+    const response = await apiClient.get(`/transactions/requested/approve/${transactionId}`);
+    return response.data.data;
 };
 
 const requestCard = (pinCode) => {
@@ -76,6 +87,8 @@ export {
     validateUser,
     getNotifications,
     getTransactions,
+    getRequestedTransactions,
+    approveTransaction,
     requestCard,
     getCardDetails,
     verifyUserLogin,
