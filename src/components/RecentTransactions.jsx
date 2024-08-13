@@ -1,11 +1,9 @@
+/* eslint-disable react/prop-types */
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useAuth } from "../context/AuthContext";
-import { useEffect, useState } from "react";
-import { getTransactions } from "../api";
-import { setTransactions } from "../app/features/transactionSlice";
 import { formatAmount } from "../helpers";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 import { Badge } from "./ui/badge";
@@ -22,28 +20,15 @@ import {
 } from "./ui/dropdown-menu";
 import Spinner from "./Spinner";
 
-// eslint-disable-next-line react/prop-types
-const RecentTransactions = ({ limit = 20, showDescription = true, showIndex = true }) => {
+const RecentTransactions = ({
+    reload,
+    loading,
+    limit = 20,
+    showDescription = true,
+    showIndex = true,
+}) => {
     const transactions = useSelector((state) => state.transaction.transactions);
-    const dispatch = useDispatch();
     const { user } = useAuth();
-    const [loading, setLoading] = useState(true);
-
-    const handleReloadTransactions = async () => {
-        setLoading(true);
-        try {
-            const response = await getTransactions();
-            dispatch(setTransactions(response));
-        } catch (error) {
-            console.error("Error fetching transactions", error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        handleReloadTransactions();
-    }, [dispatch]);
 
     return (
         <div className="w-full">
@@ -51,7 +36,7 @@ const RecentTransactions = ({ limit = 20, showDescription = true, showIndex = tr
                 <CardHeader>
                     <CardTitle className={"flex justify-between"}>
                         <span>Recent Transactions</span>
-                        <Button variant="outline" size="sm" onClick={handleReloadTransactions}>
+                        <Button variant="outline" size="sm" onClick={reload}>
                             <RefreshCwIcon className="h-5 w-5" />
                         </Button>
                     </CardTitle>

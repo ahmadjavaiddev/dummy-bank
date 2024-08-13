@@ -1,10 +1,10 @@
+/* eslint-disable react/prop-types */
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 import { Button } from "./ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { useAuth } from "../context/AuthContext";
-import { useEffect, useState } from "react";
-import { approveTransaction, getRequestedTransactions } from "../api";
+import { approveTransaction, rejectRequest } from "../api";
 import { setRequestedTransactions } from "../app/features/transactionSlice";
 import { formatAmount } from "../helpers";
 import moment from "moment";
@@ -13,12 +13,17 @@ import { Avatar, AvatarFallback } from "./ui/avatar";
 import Spinner from "./Spinner";
 import { RefreshCwIcon } from "lucide-react";
 
-// eslint-disable-next-line react/prop-types
-const RequestedTransactions = ({ limit = 10, showDescription = true, showIndex = true }) => {
+const RequestedTransactions = ({
+    reload,
+    loading,
+    setLoading,
+    limit = 10,
+    showDescription = true,
+    showIndex = true,
+}) => {
     const transactions = useSelector((state) => state.transaction.requestedTransactions);
     const dispatch = useDispatch();
     const { user } = useAuth();
-    const [loading, setLoading] = useState(true);
 
     const handleApproveTransaction = async (transactionId) => {
         setLoading(true);
@@ -37,11 +42,16 @@ const RequestedTransactions = ({ limit = 10, showDescription = true, showIndex =
         }
     };
 
-    const handleReloadTransactions = async () => {
+    const handleRejectRequest = async (transactionId) => {
         setLoading(true);
         try {
-            const response = await getRequestedTransactions();
-            dispatch(setRequestedTransactions(response));
+            const response = await rejectRequest(transactionId);
+            if (response.success) {
+                const removeApprovedTransaction = transactions.filter(
+                    (transaction) => transaction._id !== transactionId
+                );
+                dispatch(setRequestedTransactions(removeApprovedTransaction));
+            }
         } catch (error) {
             console.error("Error fetching transactions", error);
         } finally {
@@ -49,17 +59,13 @@ const RequestedTransactions = ({ limit = 10, showDescription = true, showIndex =
         }
     };
 
-    useEffect(() => {
-        handleReloadTransactions();
-    }, [dispatch]);
-
     return (
         <div className="w-full">
             <Card>
                 <CardHeader>
                     <CardTitle className={"flex justify-between"}>
-                        <span>Pending Requests</span>
-                        <Button variant="outline" size="sm" onClick={handleReloadTransactions}>
+                        <span>Requested Transactions</span>
+                        <Button variant="outline" size="sm" onClick={reload}>
                             <RefreshCwIcon className="h-5 w-5" />
                         </Button>
                     </CardTitle>
@@ -68,6 +74,7 @@ const RequestedTransactions = ({ limit = 10, showDescription = true, showIndex =
                     <Table>
                         <TableHeader>
                             <TableRow>
+                                {showIndex && <TableHead>Index</TableHead>}
                                 <TableHead>User</TableHead>
                                 <TableHead>Date</TableHead>
                                 {showDescription && <TableHead>Description</TableHead>}
@@ -149,6 +156,11 @@ const RequestedTransactions = ({ limit = 10, showDescription = true, showIndex =
                                                         variant="outline"
                                                         size="sm"
                                                         className={"text-red-500 font-bold"}
+                                                        onClick={() =>
+                                                            handleRejectRequest(
+                                                                transaction._id
+                                                            )
+                                                        }
                                                     >
                                                         Reject
                                                     </Button>
@@ -166,42 +178,6 @@ const RequestedTransactions = ({ limit = 10, showDescription = true, showIndex =
                                     </TableCell>
                                 </TableRow>
                             )}
-                            {/* <TableRow>
-                                <TableCell>2023-04-18</TableCell>
-                                <TableCell>Bill Payment</TableCell>
-                                <TableCell>$125.00</TableCell>
-                                <TableCell>
-                                    <Badge variant="outline">Pending</Badge>
-                                </TableCell>
-                                <TableCell>
-                                    <div className="flex items-center gap-2">
-                                        <Button variant="outline" size="sm">
-                                            Approve
-                                        </Button>
-                                        <Button variant="outline" size="sm" color="red">
-                                            Reject
-                                        </Button>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>2023-04-16</TableCell>
-                                <TableCell>Fund Transfer</TableCell>
-                                <TableCell>$500.00</TableCell>
-                                <TableCell>
-                                    <Badge variant="outline">Pending</Badge>
-                                </TableCell>
-                                <TableCell>
-                                    <div className="flex items-center gap-2">
-                                        <Button variant="outline" size="sm">
-                                            Approve
-                                        </Button>
-                                        <Button variant="outline" size="sm" color="red">
-                                            Reject
-                                        </Button>
-                                    </div>
-                                </TableCell>
-                            </TableRow> */}
                         </TableBody>
                     </Table>
                 </CardContent>
