@@ -8,30 +8,31 @@ import { setRequestedTransactions, setTransactions } from "../app/features/trans
 import { useDispatch } from "react-redux";
 
 const Home = () => {
-    const [loading, setLoading] = useState(true);
+    const [recentLoading, setRecentLoading] = useState(true);
+    const [requestLoading, setRequestLoading] = useState(true);
     const dispatch = useDispatch();
 
     const recentTransactions = async () => {
-        setLoading(true);
+        setRecentLoading(true);
         try {
             const response = await getTransactions();
             dispatch(setTransactions(response));
         } catch (error) {
             console.error("Error fetching transactions", error);
         } finally {
-            setLoading(false);
+            setRecentLoading(false);
         }
     };
 
     const requestedTransactions = async () => {
-        setLoading(true);
+        setRequestLoading(true);
         try {
             const response = await getRequestedTransactions();
             dispatch(setRequestedTransactions(response));
         } catch (error) {
             console.error("Error fetching transactions", error);
         } finally {
-            setLoading(false);
+            setRequestLoading(false);
         }
     };
     useEffect(() => {
@@ -91,14 +92,18 @@ const Home = () => {
                     </div>
                     <div className="flex mt-5 gap-5">
                         <RecentTransactions
-                            loading={loading}
+                            loading={recentLoading}
+                            setLoading={setRecentLoading}
+                            reload={recentTransactions}
                             limit={5}
                             showDescription={false}
                             showIndex={false}
                         />
 
                         <RequestedTransactions
-                            loading={loading}
+                            loading={requestLoading}
+                            setLoading={setRequestLoading}
+                            reload={requestedTransactions}
                             limit={5}
                             showDescription={false}
                             showIndex={false}
