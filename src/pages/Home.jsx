@@ -1,9 +1,44 @@
+import { useEffect, useState } from "react";
 import RecentTransactions from "../components/RecentTransactions";
 import RequestedTransactions from "../components/RequestedTransactions";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { ArrowDownIcon, ArrowUpIcon, CreditCardIcon } from "lucide-react";
+import { getRequestedTransactions, getTransactions } from "../api";
+import { setRequestedTransactions, setTransactions } from "../app/features/transactionSlice";
+import { useDispatch } from "react-redux";
 
 const Home = () => {
+    const [loading, setLoading] = useState(true);
+    const dispatch = useDispatch();
+
+    const recentTransactions = async () => {
+        setLoading(true);
+        try {
+            const response = await getTransactions();
+            dispatch(setTransactions(response));
+        } catch (error) {
+            console.error("Error fetching transactions", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const requestedTransactions = async () => {
+        setLoading(true);
+        try {
+            const response = await getRequestedTransactions();
+            dispatch(setRequestedTransactions(response));
+        } catch (error) {
+            console.error("Error fetching transactions", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    useEffect(() => {
+        recentTransactions();
+        requestedTransactions();
+    }, []);
+
     return (
         <>
             <main className="flex-1 p-4 sm:px-6 sm:py-0 mt-5">
@@ -56,12 +91,14 @@ const Home = () => {
                     </div>
                     <div className="flex mt-5 gap-5">
                         <RecentTransactions
+                            loading={loading}
                             limit={5}
                             showDescription={false}
                             showIndex={false}
                         />
 
                         <RequestedTransactions
+                            loading={loading}
                             limit={5}
                             showDescription={false}
                             showIndex={false}
