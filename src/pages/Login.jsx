@@ -52,9 +52,7 @@ const Login = () => {
 
         try {
             setProcessing(true);
-            const response = await registerUser(user);
-            LocalStorage.set("accessToken", response.data.data.accessToken);
-            LocalStorage.set("refreshToken", response.data.data.refreshToken);
+            await registerUser(user);
             navigate(`/admin`);
             toast.success("Registration Successful!");
         } catch (error) {

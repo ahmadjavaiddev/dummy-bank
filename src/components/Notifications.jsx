@@ -22,7 +22,7 @@ const Notifications = () => {
         (async () => {
             try {
                 const response = await getNotifications();
-                dispatch(setNotifications(response.data.data));
+                dispatch(setNotifications(response));
             } catch (error) {
                 console.log("Error in notifications ::", error);
             }
