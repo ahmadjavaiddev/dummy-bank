@@ -35,29 +35,27 @@ const AuthProvider = ({ children }) => {
                 let response = await validateUser();
                 if (response.isLoggedIn && token) {
                     setUser(response);
-                    return;
-                }
-
-                const refreshToken = LocalStorage.get("refreshToken");
-                if (!refreshToken) {
-                    setUser(null);
-                    return;
-                }
-
-                const success = await refreshTokenAgain(refreshToken);
-                if (!success) {
-                    setUser(null);
-                    return;
-                }
-
-                response = await validateUser(); // Re-validate user with new access token
-                if (response.isLoggedIn) {
-                    setUser(response);
-                    window.location.href = "/admin"; // Redirect after successful refresh
                 } else {
-                    setUser(null);
+                    const refreshToken = LocalStorage.get("refreshToken");
+                    if (refreshToken) {
+                        const success = await refreshTokenAgain(refreshToken);
+                        if (success) {
+                            response = await validateUser(); // Re-validate user with new access token
+                            if (response.isLoggedIn) {
+                                setUser(response);
+                                window.location.href = "/admin"; // Redirect after successful refresh
+                            } else {
+                                setUser(null);
+                            }
+                        } else {
+                            setUser(null);
+                        }
+                    } else {
+                        setUser(null);
+                    }
                 }
             } catch (error) {
+                LocalStorage.remove("accessToken");
                 console.log("Error while verifying user!");
                 setUser(null);
             } finally {
