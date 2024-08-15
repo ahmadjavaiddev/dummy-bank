@@ -32,7 +32,7 @@ const router = createBrowserRouter(
                 }
             />
             <Route
-                path="/verify/:userToken"
+                path="/verify/:type/:userToken"
                 element={
                     <PublicRoute>
                         <Verify />

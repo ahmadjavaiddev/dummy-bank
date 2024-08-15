@@ -6,11 +6,14 @@ import { ArrowDownIcon, ArrowUpIcon, CreditCardIcon } from "lucide-react";
 import { getRequestedTransactions, getTransactions } from "../api";
 import { setRequestedTransactions, setTransactions } from "../app/features/transactionSlice";
 import { useDispatch } from "react-redux";
+import { formatAmount } from "../helpers";
+import { useAuth } from "../context/AuthContext";
 
 const Home = () => {
     const [recentLoading, setRecentLoading] = useState(true);
     const [requestLoading, setRequestLoading] = useState(true);
     const dispatch = useDispatch();
+    const { user } = useAuth();
 
     const recentTransactions = async () => {
         setRecentLoading(true);
@@ -51,7 +54,9 @@ const Home = () => {
                             </CardHeader>
                             <CardContent>
                                 <div className="flex items-center justify-between">
-                                    <div className="text-4xl font-bold">$12,345.67</div>
+                                    <div className="text-4xl font-bold">
+                                        ${formatAmount(user?.balance)}
+                                    </div>
                                     <ArrowUpIcon className="h-6 w-6 text-green-500" />
                                 </div>
                                 <div className="text-sm text-muted-foreground">

@@ -104,6 +104,11 @@ const verifyUserLogin = async (token) => {
     return response.data.data;
 };
 
+const verifyUserTransaction = async (token) => {
+    const response = await apiClient.get(`/users/transactions/${token}`);
+    return response.data.data;
+};
+
 export {
     loginUser,
     registerUser,
@@ -117,4 +122,5 @@ export {
     requestCard,
     getCardDetails,
     verifyUserLogin,
+    verifyUserTransaction,
 };

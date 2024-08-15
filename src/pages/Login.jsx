@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import {
     Card,
@@ -10,12 +10,14 @@ import {
 } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { loginUser, registerUser } from "../api/index";
 
 const Login = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const [message, setMessage] = useState("");
     const [processing, setProcessing] = useState(false);
     const [activeLogin, setActiveLogin] = useState(true);
     const [user, setUser] = useState({
@@ -34,7 +36,9 @@ const Login = () => {
         try {
             setProcessing(true);
             await loginUser({ email: user.email, password: user.password });
-            // navigate(`/admin`);
+
+            setMessage("Please check you email!");
+
             toast.success("Login Successful!");
         } catch (error) {
             toast.error("Error logging in user!");
@@ -61,11 +65,27 @@ const Login = () => {
         }
     };
 
+    useEffect(() => {
+        // Use URLSearchParams to parse the query parameters
+        const queryParams = new URLSearchParams(location.search);
+
+        // Get the 'refresh' parameter
+        const refresh = queryParams.get("refresh");
+        if (refresh) {
+            setTimeout(() => window.location.reload(), 3000);
+        }
+    }, [location.search]);
+
     return (
         <div className="flex justify-center items-center h-[100vh]">
             {activeLogin ? (
                 <Card className="w-[430px]">
                     <CardHeader>
+                        {message && (
+                            <h3 className="text-green-500 border border-green-600 rounded-md mb-2 px-2 py-1 font-semibold text-center">
+                                {message}
+                            </h3>
+                        )}
                         <CardTitle>{processing ? "Processing" : "Login"}</CardTitle>
                         <CardDescription>
                             Login to your account to send and receive money efficiently.
