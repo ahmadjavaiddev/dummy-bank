@@ -47,7 +47,7 @@ const Home = () => {
         <>
             <main className="flex-1 p-4 sm:px-6 sm:py-0 mt-5">
                 <div>
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid grid-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                         <Card>
                             <CardHeader>
                                 <CardTitle>Account Balance</CardTitle>
@@ -95,7 +95,7 @@ const Home = () => {
                             </CardContent>
                         </Card>
                     </div>
-                    <div className="flex mt-5 gap-5">
+                    <div className="md:flex mt-5 gap-5">
                         <RecentTransactions
                             loading={recentLoading}
                             setLoading={setRecentLoading}

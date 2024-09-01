@@ -3,17 +3,29 @@ import RecentTransactions from "../components/RecentTransactions";
 import RequestedTransactions from "../components/RequestedTransactions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { useEffect, useState } from "react";
-import { getRequestedTransactions, getTransactions } from "../api";
+import { getRequestedTransactions, getTransactions, reloadTransactions } from "../api";
 import { setRequestedTransactions, setTransactions } from "../app/features/transactionSlice";
 
 const TransactionsPage = () => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(true);
 
-    const reloadRecentTransactions = async () => {
+    const getRecentTransactions = async () => {
         setLoading(true);
         try {
             const response = await getTransactions();
+            dispatch(setTransactions(response));
+        } catch (error) {
+            console.error("Error fetching transactions", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const reloadRecentTransactions = async () => {
+        setLoading(true);
+        try {
+            const response = await reloadTransactions();
             dispatch(setTransactions(response));
         } catch (error) {
             console.error("Error fetching transactions", error);
@@ -35,7 +47,7 @@ const TransactionsPage = () => {
     };
 
     useEffect(() => {
-        reloadRecentTransactions();
+        getRecentTransactions();
         reloadRequestedTransactions();
     }, [dispatch]);
 

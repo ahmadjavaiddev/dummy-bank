@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../components/ui/card";
 import { verifyUserLogin, verifyUserTransaction } from "../api";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { Button } from "../components/ui/button";
 
-const Verify = () => {
+// eslint-disable-next-line react/prop-types
+const Verify = ({ type, userToken }) => {
     const navigate = useNavigate();
-    const { type, userToken } = useParams();
     const [error, setError] = useState("");
 
     const handleUserVerification = async () => {
@@ -16,9 +16,11 @@ const Verify = () => {
                 await verifyUserLogin(userToken);
                 toast.success("User verified successfully");
                 navigate("/?refresh=true");
+                console.log("Type Of Page in login ::", type);
                 return;
             }
             if (type === "transactions") {
+                console.log("Type Of Page in Transactions ::", type);
                 await verifyUserTransaction(userToken);
                 toast.success("User verified successfully");
                 navigate("/admin/transactions");
@@ -30,6 +32,10 @@ const Verify = () => {
             setError("Invalid Verification Link");
         }
     };
+
+    useEffect(() => {
+        console.log("Type ::", type);
+    }, []);
 
     return (
         <div className="flex flex-col justify-center items-center h-[100vh] w-[400px] mx-auto">

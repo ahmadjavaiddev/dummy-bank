@@ -44,7 +44,7 @@ function Layout({ children }) {
                 <Sidebar />
                 <div className="flex-1">
                     <Header />
-                    <div className="m-5">{children}</div>
+                    <div className="md:m-5">{children}</div>
                 </div>
             </div>
         </>

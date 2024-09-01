@@ -34,21 +34,25 @@ const RecentTransactions = ({
         <div className="w-full">
             <Card>
                 <CardHeader>
-                    <CardTitle className={"flex justify-between"}>
+                    <CardTitle className="flex justify-between items-center flex-wrap gap-4">
                         <span>Recent Transactions</span>
                         <Button variant="outline" size="sm" onClick={reload}>
                             <RefreshCwIcon className="h-5 w-5" />
                         </Button>
                     </CardTitle>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                         <Input
                             type="search"
                             placeholder="Search transactions"
-                            className="max-w-xs"
+                            className="max-w-xs w-full sm:w-auto"
                         />
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="outline" size="sm">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="w-full sm:w-auto"
+                                >
                                     <FilterIcon className="h-4 w-4 mr-2" />
                                     Filter
                                 </Button>
@@ -67,105 +71,115 @@ const RecentTransactions = ({
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                {showIndex && <TableHead>Index</TableHead>}
-                                <TableHead>User</TableHead>
-                                <TableHead>Date</TableHead>
-                                {showDescription && <TableHead>Description</TableHead>}
-                                <TableHead>Amount</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead>Action</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {loading ? (
+                    <div>
+                        <Table
+                            className="min-w-[800px] text-lg"
+                            style={{
+                                overflowX: "scroll",
+                            }}
+                        >
+                            <TableHeader>
                                 <TableRow>
-                                    <TableCell colSpan={7}>
-                                        <Spinner />
-                                    </TableCell>
+                                    {showIndex && <TableHead>Index</TableHead>}
+                                    <TableHead>User</TableHead>
+                                    <TableHead>Date</TableHead>
+                                    {showDescription && <TableHead>Description</TableHead>}
+                                    <TableHead>Amount</TableHead>
+                                    <TableHead>Status</TableHead>
+                                    <TableHead>Action</TableHead>
                                 </TableRow>
-                            ) : transactions.length > 0 ? (
-                                transactions?.slice(0, limit)?.map((transaction, index) => {
-                                    const isFromUser = transaction.from?.email === user?.email;
-                                    const displayUser = isFromUser
-                                        ? transaction.to
-                                        : transaction.from;
-                                    return (
-                                        <TableRow key={transaction._id}>
-                                            {showIndex && (
-                                                <TableCell className={"w-5"}>
-                                                    {++index}
-                                                </TableCell>
-                                            )}
-                                            <TableCell>
-                                                <span className="flex gap-3">
-                                                    <Avatar className="h-8 w-8 border">
-                                                        <AvatarImage src="/placeholder-user.jpg" />
-                                                        <AvatarFallback>
-                                                            {displayUser?.userName[0]?.toUpperCase()}
-                                                        </AvatarFallback>
-                                                    </Avatar>
-                                                    <span className="flex flex-col">
-                                                        <span className="font-medium">
-                                                            {displayUser?.userName[0]?.toUpperCase() +
-                                                                displayUser?.userName?.slice(
-                                                                    1
-                                                                )}
+                            </TableHeader>
+                            <TableBody>
+                                {loading ? (
+                                    <TableRow>
+                                        <TableCell colSpan={7}>
+                                            <Spinner />
+                                        </TableCell>
+                                    </TableRow>
+                                ) : transactions.length > 0 ? (
+                                    transactions
+                                        ?.slice(0, limit)
+                                        ?.map((transaction, index) => {
+                                            const isFromUser =
+                                                transaction.from?.email === user?.email;
+                                            const displayUser = isFromUser
+                                                ? transaction.to
+                                                : transaction.from;
+                                            return (
+                                                <TableRow key={transaction._id}>
+                                                    {showIndex && (
+                                                        <TableCell className="w-5">
+                                                            {++index}
+                                                        </TableCell>
+                                                    )}
+                                                    <TableCell>
+                                                        <span className="flex gap-3 items-center">
+                                                            <Avatar className="h-8 w-8 border">
+                                                                <AvatarImage src="/placeholder-user.jpg" />
+                                                                <AvatarFallback>
+                                                                    {displayUser?.userName[0]?.toUpperCase()}
+                                                                </AvatarFallback>
+                                                            </Avatar>
+                                                            <span className="flex flex-col">
+                                                                <span className="font-medium">
+                                                                    {displayUser?.userName[0]?.toUpperCase() +
+                                                                        displayUser?.userName?.slice(
+                                                                            1
+                                                                        )}
+                                                                </span>
+                                                                <span className="text-sm text-muted-foreground">
+                                                                    {displayUser?.email}
+                                                                </span>
+                                                            </span>
                                                         </span>
-                                                        <span className="text-sm text-muted-foreground">
-                                                            {displayUser?.email}
-                                                        </span>
-                                                    </span>
-                                                </span>
-                                            </TableCell>
-                                            <TableCell>
-                                                {moment(transaction.updatedAt)
-                                                    .add("TIME_ZONE", "hours")
-                                                    .fromNow(true)}{" "}
-                                                ago
-                                            </TableCell>
-                                            {showDescription && (
-                                                <TableCell>
-                                                    {transaction.description}
-                                                </TableCell>
-                                            )}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {moment(transaction.updatedAt)
+                                                            .add("TIME_ZONE", "hours")
+                                                            .fromNow(true)}{" "}
+                                                        ago
+                                                    </TableCell>
+                                                    {showDescription && (
+                                                        <TableCell>
+                                                            {transaction.description}
+                                                        </TableCell>
+                                                    )}
 
-                                            <TableCell>
-                                                <span
-                                                    className={`font-medium ${
-                                                        isFromUser
-                                                            ? "text-red-500"
-                                                            : "text-green-500"
-                                                    }`}
-                                                >
-                                                    {isFromUser ? "-" : "+"}$
-                                                    {formatAmount(transaction.amount)}
-                                                </span>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Badge variant="secondary">
-                                                    {transaction.status}
-                                                </Badge>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Badge variant="secondary">VIEW</Badge>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })
-                            ) : (
-                                <TableRow>
-                                    <TableCell colSpan={6}>
-                                        <span className="grid gap-4">
-                                            Transactions Not Found!
-                                        </span>
-                                    </TableCell>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
+                                                    <TableCell>
+                                                        <span
+                                                            className={`font-medium ${
+                                                                isFromUser
+                                                                    ? "text-red-500"
+                                                                    : "text-green-500"
+                                                            }`}
+                                                        >
+                                                            {isFromUser ? "-" : "+"}$
+                                                            {formatAmount(transaction.amount)}
+                                                        </span>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <Badge variant="secondary">
+                                                            {transaction.status}
+                                                        </Badge>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <Badge variant="secondary">VIEW</Badge>
+                                                    </TableCell>
+                                                </TableRow>
+                                            );
+                                        })
+                                ) : (
+                                    <TableRow>
+                                        <TableCell colSpan={6}>
+                                            <span className="grid gap-4">
+                                                Transactions Not Found!
+                                            </span>
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </div>
                 </CardContent>
             </Card>
         </div>
